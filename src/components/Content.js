@@ -1,28 +1,33 @@
 import React from "react";
-import { Flex, VStack, Text, Box, Spacer, Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 
 import Navbar from "./Navbar";
+import Catalog from "./Catalog";
 import '../styles/Content.scss';
+import { Route, Routes, Navigate } from "react-router";
 
 function Content() { 
     return(
-        <Grid
-            templateAreas={`
-                "header header"
-                "main main"
-                "footer footer"
-            `}
-        >
-        <GridItem padding='16px' area={'header'}>
-            <Navbar className="navbar"/>
-        </GridItem>
-        <GridItem bg='green.300' area={'main'}>
-            Main
-        </GridItem>
-        <GridItem pl='2' bg='blue.300' area={'footer'}>
-            Footer
-        </GridItem>
-        </Grid>
+        <div className="page-content">
+            <Grid
+                templateAreas={`
+                    "header"
+                    "main"
+                `}
+                gridTemplateRows={'70px 100%'}
+                height='100%'
+            >
+                <GridItem padding='16px' area={'header'}>
+                    <Navbar />
+                </GridItem>
+                <GridItem overflow={'scroll'} area={'main'}>
+                    <Routes>
+                        <Route path="/catalog" element={<Catalog/>} />
+                        <Route path="*" element={<Navigate to="/catalog" replace />} />
+                    </Routes>                    
+                </GridItem>
+            </Grid>
+        </div>
     );
 }
 
