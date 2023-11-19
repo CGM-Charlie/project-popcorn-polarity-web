@@ -1,5 +1,6 @@
-import { Flex, SimpleGrid, Image, AspectRatio, Box } from "@chakra-ui/react";
+import { Flex, SimpleGrid, Image, AspectRatio, Box, Text } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
+import LandingPage from "./LandingPage";
 
 function Catalog() {
     const [movies, setMovies] = useState([]);
@@ -21,8 +22,13 @@ function Catalog() {
 
     return(
         <Flex padding="16px" height="100% + 16px" width="100%" direction='column'>
+            <LandingPage />
+
+            <Text as="b" fontSize="4xl" paddingBottom="12px">Featured Films</Text>
+
             <SimpleGrid minChildWidth='200px' spacing={10}>
                 {movies.map(movie => (
+                    // TODO: Add url to detail of movie
                     <Box as='button' key={movie.id} onClick={() => console.log(movie.title)} >
                         <AspectRatio maxW='200px' ratio={2 / 3}>
                             <Image 
