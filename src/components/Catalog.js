@@ -1,9 +1,19 @@
 import { Flex, SimpleGrid, Image, AspectRatio, Box, Text } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+
 import LandingPage from "./LandingPage";
+import ImagePlaceholder from '../images/no-image-placeholder.png';
 
 function Catalog() {
     const [movies, setMovies] = useState([]);
+    
+    // React Router Navigation
+    const history = useNavigate();
+
+    const navigateToMovieDetails = (movieId) => {
+        history(`/movie/${movieId}`);
+    };
 
     useEffect(() => {
         const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
@@ -28,13 +38,14 @@ function Catalog() {
 
             <SimpleGrid minChildWidth='200px' spacing={10}>
                 {movies.map(movie => (
-                    // TODO: Add url to detail of movie
-                    <Box as='button' key={movie.id} onClick={() => console.log(movie.title)} >
+                    <Box as='button' key={movie.id} onClick={() => navigateToMovieDetails(movie.id)} >
                         <AspectRatio maxW='200px' ratio={2 / 3}>
                             <Image 
+                                borderRadius="5"
                                 src={`${BASE_IMAGE_URL}${IMAGE_SIZE}${movie.poster_path}`} alt={movie.title}
                                 boxSize='300px'
                                 objectFit='cover'
+                                fallback={ <Image src={ImagePlaceholder} /> }
                             />
                         </AspectRatio>
                     </Box>

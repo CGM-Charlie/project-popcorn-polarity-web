@@ -3,6 +3,7 @@ import { Grid, GridItem } from "@chakra-ui/react";
 
 import Navbar from "./Navbar";
 import Catalog from "./Catalog";
+import MovieDetail from "./MovieDetail";
 import '../styles/Content.scss';
 import { Route, Routes, Navigate } from "react-router";
 
@@ -22,8 +23,9 @@ function Content() {
                 </GridItem>
                 <GridItem overflow={'scroll'} area={'main'}>
                     <Routes>
-                        <Route path="/catalog" element={<Catalog/>} />
-                        <Route path="*" element={<Navigate to="/catalog" replace />} />
+                        <Route path="/home" element={<Catalog />} />
+                        <Route path="/movie/:id" element={<MovieDetail />} />
+                        <Route path="*" element={<Navigate to="/home" replace />} />
                     </Routes>                    
                 </GridItem>
             </Grid>

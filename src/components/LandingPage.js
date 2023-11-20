@@ -1,6 +1,5 @@
 import { Flex, Spacer, Text } from "@chakra-ui/react";
 import React from "react";
-import MovieSearchBar from "./MovieSearchBar";
 
 function LandingPage() { 
     return(
