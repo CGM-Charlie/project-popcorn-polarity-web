@@ -12,7 +12,9 @@ function Navbar() {
                         <Text as="b" fontSize="2xl" paddingEnd='16px'>Project Popcorn Polarity</Text>
                     </Button>
                 </Link>
-                <Button>Model</Button>
+                <Link href="/model-test">
+                    <Button>Model</Button>
+                </Link>
                 <MovieSearchBar />
             </HStack>
 

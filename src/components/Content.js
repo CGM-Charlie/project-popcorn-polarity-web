@@ -6,6 +6,7 @@ import Catalog from "./Catalog";
 import MovieDetail from "./MovieDetail";
 import '../styles/Content.scss';
 import { Route, Routes, Navigate } from "react-router";
+import PredictionComponent from "./ModelTester";
 
 function Content() { 
     return(
@@ -25,6 +26,7 @@ function Content() {
                     <Routes>
                         <Route path="/home" element={<Catalog />} />
                         <Route path="/movie/:id" element={<MovieDetail />} />
+                        <Route path="/model-test" element={<PredictionComponent />} />
                         <Route path="*" element={<Navigate to="/home" replace />} />
                     </Routes>                    
                 </GridItem>

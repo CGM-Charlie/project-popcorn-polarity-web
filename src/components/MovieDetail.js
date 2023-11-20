@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Image, AspectRatio, Spinner, Text, HStack, VStack, Badge, CircularProgress, CircularProgressLabel } from "@chakra-ui/react";
+import { Flex, Image, AspectRatio, Spinner, Text, HStack, VStack, Badge, CircularProgress, CircularProgressLabel, Card, CardBody, CardHeader } from "@chakra-ui/react";
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
 
@@ -9,6 +9,7 @@ function MovieDetail() {
     const [movie, setMovieDetails] = useState(null);
     const [movieCredits, setMovieCreditsDetails] = useState(null);
     const [reviews, setReviews] = useState([]);
+    
     const { id } = useParams(); // Get the movie ID from the URL parameters
 
     useEffect(() => {
@@ -38,6 +39,28 @@ function MovieDetail() {
             }
         };
 
+        const classifyAllReviews = async (reviews) => {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/predict-a-lot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ reviews: reviews.map(review => ({ data: review.content })) }),
+                });
+          
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+          
+                const result = await response.json();
+                const sentimentReviews = reviews.map((review, index) => ({ ...review, sentiment: result[index][0] }))
+                setReviews(sentimentReviews); // Assuming the reviews are in 'results'
+            } catch (error) {
+                console.error('Failed to fetch predictions:', error);
+            }
+        };
+
         const fetchMovieReviews = async () => {
             const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
             const URL = `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${API_KEY}`;
@@ -46,6 +69,7 @@ function MovieDetail() {
                 const response = await fetch(URL);
                 const data = await response.json();
                 setReviews(data.results); // Assuming the reviews are in 'results'
+                classifyAllReviews(data.results);
             } catch (error) {
                 console.error('Error fetching movie reviews: ', error);
             }
@@ -100,7 +124,7 @@ function MovieDetail() {
 
                     <VStack width='75%' align='flex-start'>
                         <Text fontSize='4xl' as="b">User Reviews</Text>
-                        { reviews.length > 0 ? MovieReviews(reviews) : <Text fontSize='2xl'>No User Reviews</Text>}
+                        { reviews.length > 0 ? MovieReviews(reviews) : <Text fontSize='2xl'>No User Reviews</Text> }
                     </VStack>
                 </>
             ) : (
@@ -127,7 +151,6 @@ function Authors(movieCredits) {
     const crew = movieCredits.crew.filter((person) => person.job === "Director")
 
     crew.forEach((person, index) => {
-        console.log(person)
         items.push(
             <VStack key={index} align='flex-start'>
                 <Text fontSize='2xl' as='b'>Director</Text>
@@ -144,10 +167,16 @@ function MovieReviews(reviews) {
 
     reviews.forEach((review) => {
         rows.push(
-            <VStack key={review.id} align='flex-start'>
-                <Text fontSize='2xl' as='b'>{review.author}</Text>
-                <Text>{review.content}</Text>
-            </VStack>
+            <Card key={review.id} width='100%'>
+                <CardHeader>
+                    <Text fontSize='2xl' as='b'>{review.author}</Text>
+                    <Text textColor='gray.500' paddingBottom='8px'>{moment(review.updated_at).format('DD MMMM YYYY')}</Text>
+                    {review.sentiment === 'positive' ? <Badge variant='solid' fontSize='0.8em' colorScheme='green'>Positive</Badge> : <Badge variant='solid' fontSize='0.8em' colorScheme='red'>Negative</Badge>}
+                </CardHeader>
+                <CardBody>
+                    <Text>{review.content}</Text>
+                </CardBody>
+            </Card>
         )
     });
 
