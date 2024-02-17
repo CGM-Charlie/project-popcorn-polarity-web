@@ -3,7 +3,7 @@ import React from "react";
 
 function LandingPage() { 
     return(
-        <Flex height="500px" width="100%" direction='column' alignItems='center'>
+        <Flex height="calc(100vh - 100px)" width="100%" direction='column' alignItems='center' paddingBottom='100px'>
             <Spacer />
             <VStack>
                 <Text 
